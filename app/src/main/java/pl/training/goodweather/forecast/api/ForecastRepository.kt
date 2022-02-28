@@ -6,7 +6,7 @@ interface ForecastRepository {
 
     suspend fun save(city: String, forecast: List<DayForecast>)
 
-    suspend fun load(city: String)
+    suspend fun load(city: String): List<DayForecast>
 
     suspend fun clear();
 
