@@ -14,6 +14,8 @@ class ForecastViewModel : ViewModel() {
 
     @Inject
     lateinit var forecastService: GetForecastUseCase
+    @Inject
+    lateinit var mapper: ForecastViewModelMapper
 
     init {
         componentsGraph.inject(this)
@@ -26,8 +28,8 @@ class ForecastViewModel : ViewModel() {
 
     fun refreshForecast(city: String) {
         viewModelScope.launch {
-            onForecastLoaded(forecastService.getCachedForecast(city).map(::toViewModel))
-            onForecastLoaded(forecastService.loadForecast(city).map(::toViewModel))
+            onForecastLoaded(forecastService.getCachedForecast(city).map(mapper::toViewModel))
+            onForecastLoaded(forecastService.loadForecast(city).map(mapper::toViewModel))
         }
     }
 
