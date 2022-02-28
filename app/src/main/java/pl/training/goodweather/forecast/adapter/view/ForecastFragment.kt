@@ -14,9 +14,9 @@ import pl.training.goodweather.commons.getProperty
 import pl.training.goodweather.commons.hideKeyboard
 import pl.training.goodweather.commons.setDrawable
 import pl.training.goodweather.commons.setProperty
-import pl.training.goodweather.configuration.Values.CITY_KEY
-import pl.training.goodweather.configuration.Values.DEFAULT_CITY_NAME
 import pl.training.goodweather.databinding.FragmentForecastBinding
+import pl.training.goodweather.forecast.ForecastModule.Values.CITY_KEY
+import pl.training.goodweather.forecast.ForecastModule.Values.DEFAULT_CITY_NAME
 
 class ForecastFragment : Fragment() {
 

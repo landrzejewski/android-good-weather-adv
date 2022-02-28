@@ -7,11 +7,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pl.training.goodweather.GoodWeatherApplication.Companion.componentsGraph
 import pl.training.goodweather.forecast.api.GetForecastUseCase
-import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 class ForecastViewModel : ViewModel() {
 
+    @Named("proxy")
     @Inject
     lateinit var forecastService: GetForecastUseCase
     @Inject
