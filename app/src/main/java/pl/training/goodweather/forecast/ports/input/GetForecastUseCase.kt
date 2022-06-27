@@ -6,4 +6,6 @@ interface GetForecastUseCase {
 
     suspend fun loadForecast(city: String): List<DayForecast>
 
+    suspend fun loadCurrentForecast(): DayForecast
+
 }

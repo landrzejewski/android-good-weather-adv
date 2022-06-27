@@ -21,7 +21,9 @@ class ProfileFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.color.text = "Unknown"
+        viewModel.colorValue.observe(requireActivity()) {
+            binding.color.text = it
+        }
     }
 
 }
