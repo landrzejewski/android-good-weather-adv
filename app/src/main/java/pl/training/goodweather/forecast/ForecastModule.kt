@@ -2,6 +2,8 @@ package pl.training.goodweather.forecast
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import pl.training.goodweather.commons.logging.Logger
 import pl.training.goodweather.forecast.adapters.provider.FakeForecastProvider
@@ -17,10 +19,11 @@ import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
 import pl.training.goodweather.forecast.ports.output.ForecastProvider
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class ForecastModule {
 
     companion object Values {
@@ -30,7 +33,7 @@ class ForecastModule {
 
     }
 
-    @Named("fake")
+    @Fake
     @Singleton
     @Provides
     fun fakeForecastProvider(): ForecastProvider = FakeForecastProvider()
@@ -48,7 +51,7 @@ class ForecastModule {
     @Provides
     fun openWeatherForecastProviderMapper(): OpenWeatherForecastProviderMapper = OpenWeatherForecastProviderMapper()
 
-    @Named("openweather")
+    @OpenWeather
     @Singleton
     @Provides
     fun openWeatherProvider(openWeatherApi: OpenWeatherApi, mapper: OpenWeatherForecastProviderMapper, logger: Logger): ForecastProvider = OpenWeatherForecastProviderAdapter(openWeatherApi, mapper, logger)
@@ -61,7 +64,7 @@ class ForecastModule {
     fun dayForecastDomainMapper(): DayForecastDomainMapper = DayForecastDomainMapper()
 
     @Provides
-    fun forecastProviderAdapter(@Named("openweather") forecastProvider: ForecastProvider, mapper: DayForecastDomainMapper): ForecastProviderAdapter = ForecastProviderAdapter(forecastProvider, mapper);
+    fun forecastProviderAdapter(@OpenWeather forecastProvider: ForecastProvider, mapper: DayForecastDomainMapper): ForecastProviderAdapter = ForecastProviderAdapter(forecastProvider, mapper);
 
     @Provides
     fun getForecastService(forecastProviderAdapter: ForecastProviderAdapter): GetForecastService = GetForecastService(forecastProviderAdapter)
@@ -70,3 +73,11 @@ class ForecastModule {
     fun getForecastUseCase(getForecastService: GetForecastService, mapper: DayForecastDomainMapper): GetForecastUseCase = GetForecastServiceAdapter(getForecastService, mapper)
 
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Fake
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class OpenWeather

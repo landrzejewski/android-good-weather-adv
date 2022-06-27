@@ -1,9 +1,9 @@
 package pl.training.goodweather.configuration
 
-import android.app.Application
-import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import pl.training.goodweather.commons.logging.AndroidLogger
@@ -11,11 +11,8 @@ import pl.training.goodweather.commons.logging.Logger
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule(private val application: Application) {
-
-    @Singleton
-    @Provides
-    fun context(): Context = application
+@InstallIn(SingletonComponent::class)
+class ApplicationModule {
 
     @Singleton
     @Provides

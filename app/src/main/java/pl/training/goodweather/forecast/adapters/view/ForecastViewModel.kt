@@ -4,21 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import pl.training.goodweather.GoodWeatherApplication.Companion.componentsGraph
 import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
 import javax.inject.Inject
 
-class ForecastViewModel : ViewModel() {
-
-    @Inject
-    lateinit var forecastService: GetForecastUseCase
-    @Inject
-    lateinit var mapper: ForecastViewModelMapper
-
-    init {
-        componentsGraph.inject(this)
-    }
+@HiltViewModel
+class ForecastViewModel @Inject constructor(private val forecastService: GetForecastUseCase, private val mapper: ForecastViewModelMapper) : ViewModel() {
 
     private val forecastData = MutableLiveData<List<DayForecastViewModel>>()
 

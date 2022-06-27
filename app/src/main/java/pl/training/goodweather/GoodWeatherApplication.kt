@@ -1,24 +1,7 @@
 package pl.training.goodweather
 
 import android.app.Application
-import pl.training.goodweather.configuration.ApplicationModule
-import pl.training.goodweather.configuration.ComponentsGraph
-import pl.training.goodweather.configuration.DaggerComponentsGraph
+import dagger.hilt.android.HiltAndroidApp
 
-class GoodWeatherApplication : Application() {
-
-    companion object {
-
-        lateinit var componentsGraph: ComponentsGraph
-            private set
-
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        componentsGraph = DaggerComponentsGraph.builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
-    }
-
-}
+@HiltAndroidApp
+class GoodWeatherApplication : Application()
