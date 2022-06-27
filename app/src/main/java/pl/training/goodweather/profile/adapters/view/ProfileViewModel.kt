@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import pl.training.goodweather.profile.ports.input.GetTemperatureColorUseCase
+import pl.training.profile.ports.input.GetTemperatureColorUseCase
 import javax.inject.Inject
 
 @HiltViewModel

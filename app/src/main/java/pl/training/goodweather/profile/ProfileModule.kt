@@ -9,8 +9,8 @@ import pl.training.goodweather.profile.adapters.temperature.ForecastTemperatureP
 import pl.training.goodweather.profile.adapters.temperature.TemperatureForecastMapper
 import pl.training.goodweather.profile.adapters.view.ProfileViewModelMapper
 import pl.training.goodweather.profile.domain.GetTemperatureColorService
-import pl.training.goodweather.profile.ports.input.GetTemperatureColorUseCase
-import pl.training.goodweather.profile.ports.output.TemperatureProvider
+import pl.training.profile.ports.input.GetTemperatureColorUseCase
+import pl.training.profile.ports.output.TemperatureProvider
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -1,8 +1,8 @@
 package pl.training.goodweather.profile.domain
 
-import pl.training.goodweather.profile.ports.input.GetTemperatureColorUseCase
-import pl.training.goodweather.profile.ports.model.Color
-import pl.training.goodweather.profile.ports.output.TemperatureProvider
+import pl.training.profile.ports.input.GetTemperatureColorUseCase
+import pl.training.profile.ports.model.Color
+import pl.training.profile.ports.output.TemperatureProvider
 
 class GetTemperatureColorService(private val temperatureProvider: TemperatureProvider): GetTemperatureColorUseCase {
 
