@@ -10,7 +10,7 @@ class DayForecastDomainMapper {
         dayForecastDomain.description,
         dayForecastDomain.temperature,
         dayForecastDomain.pressure,
-        dayForecastDomain.data
+        dayForecastDomain.date
     )
 
     fun toDomain(dayForecast: DayForecast) = DayForecastDomain(
@@ -18,7 +18,7 @@ class DayForecastDomainMapper {
         dayForecast.description,
         dayForecast.temperature,
         dayForecast.pressure,
-        dayForecast.data
+        dayForecast.date
     )
 
 }

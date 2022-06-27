@@ -7,5 +7,5 @@ class DayForecastDomain(
     val description: String,
     val temperature: Double,
     val pressure: Double,
-    val data: Date
+    val date: Date
 )
