@@ -23,5 +23,10 @@
             app:destination="@id/forecastFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="pl.training.goodweather.profile.adapters.view.ProfileFragment"
+        android:label="@string/profile">
+    </fragment>
 
 </navigation>
