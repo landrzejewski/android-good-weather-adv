@@ -9,6 +9,11 @@ import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeathe
 import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeatherForecastProviderAdapter
 import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeatherForecastProviderMapper
 import pl.training.goodweather.forecast.adapters.view.ForecastViewModelMapper
+import pl.training.goodweather.forecast.domain.GetForecastService
+import pl.training.goodweather.forecast.domain.adapters.DayForecastDomainMapper
+import pl.training.goodweather.forecast.domain.adapters.ForecastProviderAdapter
+import pl.training.goodweather.forecast.domain.adapters.GetForecastServiceAdapter
+import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
 import pl.training.goodweather.forecast.ports.output.ForecastProvider
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -51,5 +56,17 @@ class ForecastModule {
     @Singleton
     @Provides
     fun forecastViewModelMapper(): ForecastViewModelMapper = ForecastViewModelMapper()
+
+    @Provides
+    fun dayForecastDomainMapper(): DayForecastDomainMapper = DayForecastDomainMapper()
+
+    @Provides
+    fun forecastProviderAdapter(@Named("openweather") forecastProvider: ForecastProvider, mapper: DayForecastDomainMapper): ForecastProviderAdapter = ForecastProviderAdapter(forecastProvider, mapper);
+
+    @Provides
+    fun getForecastService(forecastProviderAdapter: ForecastProviderAdapter): GetForecastService = GetForecastService(forecastProviderAdapter)
+
+    @Provides
+    fun getForecastUseCase(getForecastService: GetForecastService, mapper: DayForecastDomainMapper): GetForecastUseCase = GetForecastServiceAdapter(getForecastService, mapper)
 
 }
