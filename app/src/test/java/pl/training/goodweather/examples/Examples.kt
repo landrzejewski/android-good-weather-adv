@@ -215,17 +215,19 @@ class Examples {
       //  }
     }
 
+    val mockUsersApi = createMockApi(
+        MockResponse("https://localhost/users", listOf(1, 2)),
+        MockResponse("https://localhost/users/1", UserDto(1, "Jan Kowalski", "jan.kowalski@training.pl")),
+        MockResponse("https://localhost/users/2", UserDto(2, "Marek Nowak", "marek.nowak@training.pl")),
+        type = MockUsersApi::class.java)
+
     @Test
     fun singleNetworkRequest() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val result = createMockApi(MockResponse("https://localhost/users", usersIds), type = MockUsersApi::class.java).getUsersIds()
-            println("Result $result")
+        GlobalScope.launch {
+            println("Result ${mockUsersApi.getUsersIds()}")
         }
         Thread.sleep(1_000)
     }
-
-    private val usersIds = listOf(1, 2, 3, 4)
-
 
     private fun threadName() = Thread.currentThread().name
 
