@@ -218,7 +218,7 @@ class Examples {
     @Test
     fun singleNetworkRequest() {
         GlobalScope.launch(Dispatchers.IO) {
-            val result = createMockApi(MockResponse("https://localhost/users", usersIds)).getUsersIds()
+            val result = createMockApi(MockResponse("https://localhost/users", usersIds), type = MockUsersApi::class.java).getUsersIds()
             println("Result $result")
         }
         Thread.sleep(1_000)
