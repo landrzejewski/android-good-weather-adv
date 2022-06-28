@@ -1,6 +1,6 @@
 package pl.training.goodweather.forecast.adapters.provider.openweather
 
-import pl.training.goodweather.forecast.ports.model.DayForecast
+import pl.training.forecast.ports.model.DayForecast
 import java.util.*
 
 class OpenWeatherForecastProviderMapper {

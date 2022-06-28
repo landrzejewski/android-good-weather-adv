@@ -1,7 +1,7 @@
 package pl.training.goodweather.profile.adapters.temperature
 
-import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
-import pl.training.goodweather.forecast.ports.model.TemperatureLoadFailedException
+import pl.training.forecast.ports.input.GetForecastUseCase
+import pl.training.forecast.ports.model.TemperatureLoadFailedException
 import pl.training.profile.ports.model.Temperature
 import pl.training.profile.ports.output.TemperatureProvider
 

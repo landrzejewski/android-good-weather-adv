@@ -11,6 +11,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/forecast-domain" />
+            <option value="$PROJECT_DIR$/forecast-ports" />
             <option value="$PROJECT_DIR$/profile-adapters" />
             <option value="$PROJECT_DIR$/profile-domain" />
             <option value="$PROJECT_DIR$/profile-ports" />

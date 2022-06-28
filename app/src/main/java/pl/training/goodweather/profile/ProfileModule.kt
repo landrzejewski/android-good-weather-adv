@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
+import pl.training.forecast.ports.input.GetForecastUseCase
 import pl.training.goodweather.profile.adapters.temperature.ForecastTemperatureProviderAdapter
 import pl.training.goodweather.profile.adapters.temperature.TemperatureForecastMapper
 import pl.training.profile.adapters.view.ProfileViewModelMapper

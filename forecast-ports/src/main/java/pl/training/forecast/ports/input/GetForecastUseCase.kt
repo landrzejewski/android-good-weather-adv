@@ -1,6 +1,6 @@
-package pl.training.goodweather.forecast.ports.input
+package pl.training.forecast.ports.input
 
-import pl.training.goodweather.forecast.ports.model.DayForecast
+import pl.training.forecast.ports.model.DayForecast
 
 interface GetForecastUseCase {
 

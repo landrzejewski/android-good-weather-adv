@@ -1,8 +1,8 @@
-package pl.training.goodweather.forecast.domain
+package pl.training.forecast.domain
 
 import java.util.*
 
-class DayForecastDomain(
+internal class DayForecastDomain(
     val icon: String,
     val description: String,
     val temperature: Double,

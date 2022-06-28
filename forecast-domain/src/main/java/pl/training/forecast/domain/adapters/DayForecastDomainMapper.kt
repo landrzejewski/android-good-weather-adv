@@ -1,9 +1,9 @@
-package pl.training.goodweather.forecast.domain.adapters
+package pl.training.forecast.domain.adapters
 
-import pl.training.goodweather.forecast.domain.DayForecastDomain
-import pl.training.goodweather.forecast.ports.model.DayForecast
+import pl.training.forecast.domain.DayForecastDomain
+import pl.training.forecast.ports.model.DayForecast
 
-class DayForecastDomainMapper {
+internal class DayForecastDomainMapper {
 
     fun toPort(dayForecastDomain: DayForecastDomain) = DayForecast(
         dayForecastDomain.icon,

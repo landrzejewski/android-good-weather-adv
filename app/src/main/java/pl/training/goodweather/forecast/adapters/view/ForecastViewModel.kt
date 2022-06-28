@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
+import pl.training.forecast.ports.input.GetForecastUseCase
 import javax.inject.Inject
 
 @HiltViewModel

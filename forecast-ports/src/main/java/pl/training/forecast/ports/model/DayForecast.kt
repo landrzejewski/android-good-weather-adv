@@ -1,4 +1,4 @@
-package pl.training.goodweather.forecast.ports.model
+package pl.training.forecast.ports.model
 
 import java.util.*
 

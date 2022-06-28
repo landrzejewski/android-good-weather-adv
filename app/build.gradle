@@ -67,4 +67,6 @@ dependencies {
     implementation project(':profile-ports')
     implementation project(':profile-domain')
     implementation project(':profile-adapters')
+    implementation project(':forecast-ports')
+    implementation project(':forecast-domain')
 }
