@@ -4,6 +4,9 @@ import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MockNetworkInterceptor: Interceptor {
 
@@ -42,3 +45,21 @@ data class MockResponse(
     val delayOnMilliseconds: Long = 250,
     val isPersistent: Boolean = true
 )
+
+fun <T> createMockApi(vararg mockResponses: MockResponse, type: Class<T>, baseUrl: String = "https://localhost/"): T {
+    val interceptor = MockNetworkInterceptor()
+    for (mockResponse in mockResponses) {
+        interceptor.addMock(mockResponse)
+    }
+    val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+        .addInterceptor(interceptor)
+        .build()
+    val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    return retrofit.create(type)
+}
+
