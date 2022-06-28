@@ -26,7 +26,7 @@ class MockNetworkInterceptor: Interceptor {
             .message(mockResponse.description)
             .protocol(Protocol.HTTP_1_1)
             .request(request)
-            .body(mockResponse.body.invoke().toResponseBody("application/json".toMediaType()))
+            .body(gson.toJson(mockResponse.body).toResponseBody("application/json".toMediaType()))
             .build()
     }
 
@@ -36,9 +36,9 @@ class MockNetworkInterceptor: Interceptor {
 
 data class MockResponse(
     val path: String,
-    val body: () -> String,
-    val status: Int,
-    val description: String,
-    val delayOnMilliseconds: Long,
-    val isPersistent: Boolean
+    val body: Any ,
+    val status: Int = 200,
+    val description: String = "OK",
+    val delayOnMilliseconds: Long = 250,
+    val isPersistent: Boolean = true
 )

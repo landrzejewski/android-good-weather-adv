@@ -218,10 +218,7 @@ class Examples {
     @Test
     fun singleNetworkRequest() {
         GlobalScope.launch(Dispatchers.IO) {
-            val mockNetworkInterceptor = MockNetworkInterceptor()
-            mockNetworkInterceptor.addMock(MockResponse("https://localhost/users", { Gson().toJson(usersIds) }, 200, "Ok", 250, true))
-            val client = createMockApi(mockNetworkInterceptor)
-            val result = client.getUsersIds()
+            val result = createMockApi(MockResponse("https://localhost/users", usersIds)).getUsersIds()
             println("Result $result")
         }
         Thread.sleep(1_000)

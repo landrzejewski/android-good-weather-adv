@@ -4,7 +4,11 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-fun createMockApi(interceptor: MockNetworkInterceptor, baseUrl: String = "https://localhost/"): MockUsersApi {
+fun createMockApi(vararg mockResponses: MockResponse, baseUrl: String = "https://localhost/"): MockUsersApi {
+    val interceptor = MockNetworkInterceptor()
+    for (mockResponse in mockResponses) {
+        interceptor.addMock(mockResponse)
+    }
     val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(interceptor)
         .build()
