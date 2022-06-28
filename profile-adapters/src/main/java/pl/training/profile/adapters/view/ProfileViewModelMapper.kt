@@ -1,4 +1,4 @@
-package pl.training.goodweather.profile.adapters.view
+package pl.training.profile.adapters.view
 
 import pl.training.profile.ports.model.Color
 

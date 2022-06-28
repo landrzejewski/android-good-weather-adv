@@ -7,8 +7,8 @@ import dagger.hilt.components.SingletonComponent
 import pl.training.goodweather.forecast.ports.input.GetForecastUseCase
 import pl.training.goodweather.profile.adapters.temperature.ForecastTemperatureProviderAdapter
 import pl.training.goodweather.profile.adapters.temperature.TemperatureForecastMapper
-import pl.training.goodweather.profile.adapters.view.ProfileViewModelMapper
-import pl.training.goodweather.profile.domain.GetTemperatureColorService
+import pl.training.profile.adapters.view.ProfileViewModelMapper
+import pl.training.profile.domain.GetTemperatureColorService
 import pl.training.profile.ports.input.GetTemperatureColorUseCase
 import pl.training.profile.ports.output.TemperatureProvider
 

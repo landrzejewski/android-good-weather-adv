@@ -1,4 +1,4 @@
-package pl.training.goodweather.profile.adapters.view
+package pl.training.profile.adapters.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import pl.training.goodweather.databinding.FragmentProfileBinding
+import pl.training.profile.adapters.databinding.FragmentProfileBinding
 
-class ProfileFragment: Fragment() {
+internal class ProfileFragment: Fragment() {
 
     private val viewModel: ProfileViewModel by activityViewModels()
     private lateinit var binding: FragmentProfileBinding

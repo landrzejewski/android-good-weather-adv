@@ -1,4 +1,4 @@
-package pl.training.goodweather.profile.domain
+package pl.training.profile.domain
 
 import pl.training.profile.ports.input.GetTemperatureColorUseCase
 import pl.training.profile.ports.model.Color

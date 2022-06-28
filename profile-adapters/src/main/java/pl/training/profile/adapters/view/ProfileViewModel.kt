@@ -1,4 +1,4 @@
-package pl.training.goodweather.profile.adapters.view
+package pl.training.profile.adapters.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +9,9 @@ import pl.training.profile.ports.input.GetTemperatureColorUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val getTemperatureColorUseCase: GetTemperatureColorUseCase, private val mapper: ProfileViewModelMapper): ViewModel() {
+internal class ProfileViewModel @Inject constructor(private val getTemperatureColorUseCase: GetTemperatureColorUseCase, private val mapper: ProfileViewModelMapper): ViewModel() {
 
-    var colorValue = MutableLiveData<String>()
+    internal var colorValue = MutableLiveData<String>()
 
     init {
         viewModelScope.launch {

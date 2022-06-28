@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="pl.training.goodweather.profile.adapters.view.ProfileFragment"
+        android:name="pl.training.profile.adapters.view.ProfileFragment"
         android:label="@string/profile">
     </fragment>
 

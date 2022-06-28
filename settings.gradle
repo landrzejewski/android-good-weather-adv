@@ -14,4 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "GoodWeather"
 include ':app'
-include ':app:profile-ports'
+include ':profile-ports'
+include ':profile-domain'
+include ':profile-adapters'
