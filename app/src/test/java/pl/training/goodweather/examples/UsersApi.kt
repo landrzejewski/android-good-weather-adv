@@ -3,7 +3,7 @@ package pl.training.goodweather.examples
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface MockUsersApi {
+interface UsersApi {
 
     @GET("users")
     suspend fun getUsersIds(): List<Long>

@@ -46,7 +46,7 @@ data class MockResponse(
     val isPersistent: Boolean = true
 )
 
-fun <T> createMockApi(vararg mockResponses: MockResponse, type: Class<T>, baseUrl: String = "https://localhost/"): T {
+fun <T> createMockApi(type: Class<T>, vararg mockResponses: MockResponse, baseUrl: String = "https://localhost/"): T {
     val interceptor = MockNetworkInterceptor()
     for (mockResponse in mockResponses) {
         interceptor.addMock(mockResponse)

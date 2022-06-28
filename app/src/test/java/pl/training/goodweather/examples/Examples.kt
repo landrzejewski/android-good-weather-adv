@@ -1,9 +1,9 @@
 package pl.training.goodweather.examples
 
-import com.google.gson.Gson
 import kotlinx.coroutines.*
 import org.junit.Test
-import java.lang.RuntimeException
+import java.lang.Exception
+import kotlin.RuntimeException
 import kotlin.concurrent.thread
 
 class Examples {
@@ -215,18 +215,93 @@ class Examples {
       //  }
     }
 
-    val mockUsersApi = createMockApi(
+    val usersApi = createMockApi(UsersApi::class.java,
         MockResponse("https://localhost/users", listOf(1, 2)),
         MockResponse("https://localhost/users/1", UserDto(1, "Jan Kowalski", "jan.kowalski@training.pl")),
         MockResponse("https://localhost/users/2", UserDto(2, "Marek Nowak", "marek.nowak@training.pl")),
-        type = MockUsersApi::class.java)
+        MockResponse("https://localhost/users/3", UserDto(2, "Marek Nowak", "marek.nowak@training.pl"))
+    )
+
+    val brokenUsersApi = createMockApi(UsersApi::class.java,
+        MockResponse("https://localhost/users", listOf(1, 2), delayOnMilliseconds = 5_000)
+    )
 
     @Test
-    fun singleNetworkRequest() {
+    fun singleRequest() {
         GlobalScope.launch {
-            println("Result ${mockUsersApi.getUsersIds()}")
+            println("Result ${usersApi.getUsersIds()}")
         }
         Thread.sleep(1_000)
+    }
+
+    @Test
+    fun manySequentialRequests() {
+        GlobalScope.launch {
+            val ids = usersApi.getUsersIds()
+            println("Ids: $ids")
+            ids.forEach {
+                println(usersApi.getUser(it))
+            }
+        }
+        Thread.sleep(1_000)
+    }
+
+    @Test
+    fun manyConcurrentRequests() {
+        GlobalScope.launch {
+            val ids = usersApi.getUsersIds()
+            println("Ids: $ids")
+            val tasks = ids.map { async { usersApi.getUser(it) } }.toTypedArray()
+            awaitAll(*tasks).forEach { println(it) }
+        }
+        Thread.sleep(1_000)
+    }
+
+    @Test
+    fun usingTimeout() {
+        GlobalScope.launch {
+            try {
+                val ids = withTimeout(500) {
+                    brokenUsersApi.getUsersIds()
+                }
+                println("Ids: $ids")
+            } catch (exception: TimeoutCancellationException) {
+                println("Timeout")
+            }
+        }
+        Thread.sleep(1_000)
+    }
+
+    @Test
+    fun retryTest() = runBlocking {
+        try {
+            retry(3) {
+                throw RuntimeException()
+            }
+        } catch (exception: Exception) {
+            println("Failed")
+        }
+    }
+
+    private suspend fun <T> retryWithTimeout(times: Int, maxDelayInMilliseconds: Long = 1_000, factor: Double = 2.0, task: suspend () -> T, timeoutInMilliseconds: Long = 1_000)
+     = retry(times, maxDelayInMilliseconds, factor) {
+         withTimeout(timeoutInMilliseconds) {
+             task()
+         }
+    }
+
+    private suspend fun <T> retry(times: Int, maxDelayInMilliseconds: Long = 1_000, factor: Double = 2.0, task: suspend () -> T): T {
+        var delayValue = 0L
+        repeat(times) {
+            try {
+                return task()
+            } catch (exception: Exception) {
+                println("Retry due to exception ${exception}")
+            }
+            delay(delayValue)
+            delayValue = (delayValue * factor).toLong().coerceAtMost(maxDelayInMilliseconds)
+        }
+        return task()
     }
 
     private fun threadName() = Thread.currentThread().name
