@@ -5,6 +5,8 @@
       <module name="GoodWeather.app" target="11" />
       <module name="GoodWeather.app.profile-ports.main" target="1.8" />
       <module name="GoodWeather.app.profile-ports.test" target="1.8" />
+      <module name="GoodWeather.commons" target="11" />
+      <module name="GoodWeather.forecast-adapters" target="11" />
       <module name="GoodWeather.profile-adapters" target="11" />
       <module name="GoodWeather.profile-ports" target="1.8" />
       <module name="GoodWeather.profile-ports.main" target="1.8" />

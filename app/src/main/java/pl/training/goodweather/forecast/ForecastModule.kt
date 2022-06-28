@@ -6,12 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import pl.training.forecast.domain.adapters.DefaultForecastFactory
-import pl.training.goodweather.commons.logging.Logger
-import pl.training.goodweather.forecast.adapters.provider.FakeForecastProvider
-import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeatherApi
-import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeatherForecastProviderAdapter
-import pl.training.goodweather.forecast.adapters.provider.openweather.OpenWeatherForecastProviderMapper
-import pl.training.goodweather.forecast.adapters.view.ForecastViewModelMapper
+import pl.training.commons.logging.Logger
+import pl.training.forecast.adapters.provider.FakeForecastProvider
+import pl.training.forecast.adapters.provider.openweather.OpenWeatherApi
+import pl.training.forecast.adapters.provider.openweather.OpenWeatherForecastProviderAdapter
+import pl.training.forecast.adapters.provider.openweather.OpenWeatherForecastProviderMapper
+import pl.training.forecast.adapters.view.ForecastViewModelMapper
 import pl.training.forecast.ports.input.GetForecastUseCase
 import pl.training.forecast.ports.output.ForecastProvider
 import retrofit2.Retrofit
@@ -22,13 +22,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class ForecastModule {
-
-    companion object Values {
-
-        const val CITY_KEY = "cityName"
-        const val DEFAULT_CITY_NAME = "warsaw"
-
-    }
 
     @Fake
     @Singleton

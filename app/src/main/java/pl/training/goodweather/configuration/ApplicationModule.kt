@@ -6,8 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import pl.training.goodweather.commons.logging.AndroidLogger
-import pl.training.goodweather.commons.logging.Logger
+import pl.training.commons.logging.AndroidLogger
+import pl.training.commons.logging.Logger
 import javax.inject.Singleton
 
 @Module

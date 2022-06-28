@@ -4,6 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/landr/Desktop/GoodWeather/app/src/main/res/layout/fragment_forecast.xml" value="0.17147922998986828" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/app/src/main/res/layout/activity_main.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/app/src/main/res/layout/content_main.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/forecast-adapters/src/main/res/layout/fragment_day_forecast.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/forecast-adapters/src/main/res/layout/fragment_forecast.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/forecast-adapters/src/main/res/layout/item_day_forecast.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/forecast-adapters/src/main/res/layout/item_day_forecast_details.xml" value="0.20108695652173914" />
         <entry key="..\:/Users/landr/Desktop/android-good-weather-adv/profile-adapters/src/main/res/layout/fragment_profile.xml" value="0.1762917933130699" />
         <entry key="app/src/main/res/drawable/rounded_box.xml" value="0.346" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.34375" />
