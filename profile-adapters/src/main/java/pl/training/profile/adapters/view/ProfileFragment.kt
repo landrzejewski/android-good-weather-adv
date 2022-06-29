@@ -42,9 +42,20 @@ internal class ProfileFragment: Fragment() {
             Point(1f, 8f),
             Point(2F, 3f),
             Point(3f, 7F),
-            Point(4f, 11F),
+            Point(4f, 9F),
             Point(5f, 4F)
         ))
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(10_000)
+            binding.graph.draw(listOf(
+                Point(0f, 1f),
+                Point(1f, 3f),
+                Point(2F, 1f),
+                Point(3f, 2F),
+                Point(4f, 5F),
+                Point(5f, 1F)
+            ))
+        }
     }
 
 }
