@@ -33,9 +33,19 @@
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent" />-->
 
-   <pl.training.commons.view.Box
+   <!--<pl.training.commons.view.Box
        android:layout_width="0dp"
        android:layout_height="0dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />-->
+
+   <pl.training.commons.view.CustomButton
+       android:id="@+id/customButton"
+       android:layout_width="0dp"
+       android:layout_height="0dp"
+       android:layout_margin="50dp"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toStartOf="parent"
