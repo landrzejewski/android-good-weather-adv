@@ -37,7 +37,14 @@ internal class ProfileFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.graph.draw(listOf(Point(1f, 15f), Point(2F, 20f), Point(3f, 11F)))
+        binding.graph.draw(listOf(
+            Point(0f, 0f),
+            Point(1f, 8f),
+            Point(2F, 3f),
+            Point(3f, 7F),
+            Point(4f, 11F),
+            Point(5f, 4F)
+        ))
     }
 
 }
