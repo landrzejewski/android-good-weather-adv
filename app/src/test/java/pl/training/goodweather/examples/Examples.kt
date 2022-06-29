@@ -1,6 +1,11 @@
 package pl.training.goodweather.examples
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.junit.Test
 import java.lang.Exception
 import kotlin.RuntimeException
@@ -302,6 +307,67 @@ class Examples {
             delayValue = (delayValue * factor).toLong().coerceAtMost(maxDelayInMilliseconds)
         }
         return task()
+    }
+
+    @Test
+    fun channel() = runBlocking {
+        val channel = Channel<Int>(2)
+        launch {
+            for (value in 1..3) {
+                channel.send(value)
+            }
+            channel.close()
+        }
+        for (value in channel) {
+            println("Value: $value")
+        }
+    }
+
+    fun CoroutineScope.provider() = produce {
+        for (value in 1..3) {
+            send(value)
+        }
+    }
+
+    fun CoroutineScope.power(values: ReceiveChannel<Int>) = produce {
+        values.consumeEach {
+            send(it * it)
+        }
+    }
+
+    @Test
+    fun consumer() = runBlocking {
+        power(provider()).consumeEach {
+            println("Value: $it")
+        }
+    }
+
+    @Test
+    fun tickerChannel() = runBlocking {
+        val tickerChannel = ticker(delayMillis = 1_000, initialDelayMillis = 10_000)
+        println("Before receive")
+        tickerChannel.receive()
+        println("After receive")
+        tickerChannel.cancel()
+        // tickerChannel.receive()
+    }
+
+    fun valuesProvider() = flow {
+        for (value in 1..5) {
+            delay(1_000)
+            emit(value)
+        }
+    }
+
+    @Test
+    fun flowConsumer() = runBlocking {
+        valuesProvider()
+            .map { it * -1 }
+            .filter { it > -3 }
+            .collect {
+                println("Result: $it")
+            }
+
     }
 
     private fun threadName() = Thread.currentThread().name
