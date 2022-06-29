@@ -6,6 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pl.training.profile.adapters.databinding.FragmentProfileBinding
 
 internal class ProfileFragment: Fragment() {
@@ -24,6 +28,10 @@ internal class ProfileFragment: Fragment() {
        /* viewModel.colorValue.observe(requireActivity()) {
             binding.color.text = it
         }*/
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(5_000)
+            binding.customButton.enable()
+        }
     }
 
 }

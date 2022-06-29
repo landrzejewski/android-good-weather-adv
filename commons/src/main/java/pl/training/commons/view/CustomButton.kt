@@ -1,14 +1,15 @@
 package pl.training.commons.view
 
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import pl.training.commons.R
@@ -19,25 +20,39 @@ class CustomButton(context: Context, attributeSet: AttributeSet): ConstraintLayo
 
     private val binding = ViewCustomButtonBinding.inflate(LayoutInflater.from(context), this, true)
     private val animators = mutableListOf<ValueAnimator>()
+    private var isDisabled = false
+
+    private val icon: Drawable
+    private val label: String
 
     init {
+        val settings = context.obtainStyledAttributes(attributeSet, R.styleable.CustomButton)
+        icon = settings.getDrawable(R.styleable.CustomButton_button_image)!!
+        label = settings.getString(R.styleable.CustomButton_button_label)!!
+        settings.recycle()
         layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         val padding = dpToPx(16)
         setPadding(padding, 0, padding, padding)
+        binding.button.icon = icon
+        binding.button.text = label
+        binding.button.setOnClickListener { disable() }
     }
 
-    fun disable(onDisabled: () -> Unit = {}) {
-        binding.button.apply {
-            icon = null
-            text = ""
-            isClickable = false
-            isFocusable = false
-            shrinkButton(onDisabled)
+    fun disable() {
+        if (!isDisabled) {
+            isDisabled = true
+            binding.button.apply {
+                icon = null
+                text = ""
+                isClickable = false
+                isFocusable = false
+                shrinkButton()
+            }
+            binding.progressBar.isVisible = true
         }
-        binding.progressBar.isVisible = true
     }
 
-    private fun shrinkButton(onDisabled: () -> Unit) {
+    private fun shrinkButton() {
         val button = binding.button
         val width = button.measuredWidth
         val height = button.measuredHeight
@@ -49,23 +64,45 @@ class CustomButton(context: Context, attributeSet: AttributeSet): ConstraintLayo
             }
         }
 
-        val animatorsList = listOf(widthAnimator)
+        val alphaAnimator = ObjectAnimator.ofFloat(binding.button, "alpha", 1F, 0.8f).apply {
+            duration = 300
+        }
+
+        val animatorsList = listOf(widthAnimator, alphaAnimator)
         animators.addAll(animatorsList)
         animatorsList.forEach { it.start() }
     }
 
     fun enable() {
-        binding.button.apply {
-            extend()
-            icon = getDrawable(context, R.drawable.ic_cloud_sun_rain)
-            text = "Check"
-            isClickable = true
-            isFocusable = true
+        if (isDisabled) {
+            isDisabled = false
+            binding.button.apply {
+                extend()
+                icon = this@CustomButton.icon
+                text = label
+                isClickable = true
+                isFocusable = true
+            }
+            binding.progressBar.isVisible = false
+            reverseShrink()
         }
-        binding.progressBar.isVisible = false
     }
 
-    fun setOnClickListener()
+    private fun reverseShrink() {
+        animators.forEach {
+            it.reverse()
+            if (animators.indexOf(it) == animators.lastIndex) {
+                it.doOnEnd { animators.clear() }
+            }
+        }
+    }
+
+    fun setOnClickListener(listener: () -> Unit) {
+        binding.button.setOnClickListener {
+            disable()
+            listener()
+        }
+    }
 
     private fun dpToPx(dp: Int) = (resources.displayMetrics.density * dp).roundToInt()
 
