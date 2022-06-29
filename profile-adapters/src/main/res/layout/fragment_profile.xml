@@ -41,13 +41,23 @@
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent" />-->
 
-   <pl.training.commons.view.CustomButton
+   <!--<pl.training.commons.view.CustomButton
        android:id="@+id/customButton"
        android:layout_width="0dp"
        android:layout_height="0dp"
        android:layout_margin="50dp"
        app:button_image="@drawable/ic_sun"
        app:button_label="Refresh"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />-->
+
+   <pl.training.commons.view.LinearGraph
+       android:id="@+id/graph"
+       android:layout_width="0dp"
+       android:layout_height="0dp"
+       android:layout_margin="50dp"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toStartOf="parent"

@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pl.training.commons.view.Point
 import pl.training.profile.adapters.databinding.FragmentProfileBinding
 
 internal class ProfileFragment: Fragment() {
@@ -28,10 +29,15 @@ internal class ProfileFragment: Fragment() {
        /* viewModel.colorValue.observe(requireActivity()) {
             binding.color.text = it
         }*/
-        GlobalScope.launch(Dispatchers.Main) {
+       /* GlobalScope.launch(Dispatchers.Main) {
             delay(5_000)
             binding.customButton.enable()
-        }
+        }*/
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.graph.draw(listOf(Point(1f, 15f), Point(2F, 20f), Point(3f, 11F)))
     }
 
 }

@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 
-class Box(context: Context, attributeSet: AttributeSet): View(context) {
+class Box(context: Context, attributeSet: AttributeSet): View(context, attributeSet) {
 
     private val size = 150
     private fun getPaint(): Paint {
