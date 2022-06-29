@@ -14,7 +14,7 @@
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent"/>-->
 
-   <pl.training.commons.view.LabeledImage
+   <!--<pl.training.commons.view.LabeledImage
        android:id="@+id/image"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
@@ -23,6 +23,22 @@
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent"
        app:label="Profile"
-       app:image="@drawable/ic_cloud" />
+       app:image="@drawable/ic_cloud" />-->
+
+   <!--<pl.training.commons.view.Signature
+       android:layout_width="0dp"
+       android:layout_height="0dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />-->
+
+   <pl.training.commons.view.Box
+       android:layout_width="0dp"
+       android:layout_height="0dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
