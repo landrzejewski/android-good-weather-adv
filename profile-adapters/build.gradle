@@ -45,4 +45,5 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     compileOnly 'androidx.fragment:fragment-ktx:1.4.1'
     compileOnly project(':profile-ports')
+    compileOnly project(':commons')
 }

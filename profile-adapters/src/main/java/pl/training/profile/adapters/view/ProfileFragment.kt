@@ -21,9 +21,9 @@ internal class ProfileFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.colorValue.observe(requireActivity()) {
+       /* viewModel.colorValue.observe(requireActivity()) {
             binding.color.text = it
-        }
+        }*/
     }
 
 }
