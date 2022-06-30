@@ -1,25 +1,15 @@
 package pl.training.forecast.adapters.view
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observable.concat
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
 import pl.training.forecast.adapters.view.ForecastResult.*
 import pl.training.forecast.adapters.view.ForecastResult.Refreshed
 import pl.training.forecast.adapters.view.ForecastViewState.*
 import pl.training.forecast.ports.input.GetForecastUseCase
-import pl.training.forecast.ports.model.DayForecast
-import toObservable
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,29 +17,17 @@ internal class ForecastViewModel @Inject constructor(private val forecastService
 
     var selectedDayForecastDate: String? = null
 
-    private val cache = MutableStateFlow<ForecastViewState>(Initial)
+    private val cache = MutableSharedFlow<ForecastResult>()
 
     fun process(intents: Flow<ForecastIntent>): Flow<ForecastViewState> {
         viewModelScope.launch {
-            intents.map {
+            intents.flatMapMerge {
                 when (it) {
                     is RefreshForecast -> refreshForecast(it)
                 }
             }
-            .collect {
-
-                cache.emit(reduce(it))
-            }
+            .collect { cache.emit(it) }
         }
-
-
-
-
-
-//        .subscribe(cache::onNext) { Log.i("#VM", it.toString()) }
-//        .addTo(disposables)
-
-
         return cache.scan(Initial, this::reduce)
     }
 

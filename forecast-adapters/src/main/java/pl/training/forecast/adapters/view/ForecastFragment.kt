@@ -12,28 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.jakewharton.rxbinding4.view.clicks
 import com.jakewharton.rxbinding4.widget.textChanges
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observable.merge
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.kotlin.addTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import pl.training.forecast.adapters.R
-import pl.training.forecast.adapters.databinding.FragmentForecastBinding
 import pl.training.commons.getProperty
 import pl.training.commons.hideKeyboard
-import pl.training.commons.logging.Logger
 import pl.training.commons.setDrawable
 import pl.training.commons.setProperty
+import pl.training.forecast.adapters.R
+import pl.training.forecast.adapters.databinding.FragmentForecastBinding
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
 import pl.training.forecast.adapters.view.ForecastViewState.*
-import java.lang.RuntimeException
-import javax.inject.Inject
 
 internal class ForecastFragment : Fragment() {
 
@@ -87,18 +82,18 @@ internal class ForecastFragment : Fragment() {
 
         val flow = MutableSharedFlow<ForecastIntent>()
 
+        fragmentScope.launch {
+            viewModel.process(flow).collect {
+                render(it)
+            }
+        }
+
         refreshIntents.subscribe {
             binding.cityNameEditText.hideKeyboard()
             setProperty(CITY_KEY, it.cityName)
             fragmentScope.launch { flow.emit(it) }
         }
         .addTo(disposables)
-
-        fragmentScope.launch {
-            viewModel.process(flow).collect {
-                render(it)
-            }
-        }
 
         binding.iconImage.setOnClickListener {
             findNavController().navigate(R.id.show_day_forecast_details)
