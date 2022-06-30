@@ -5,12 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.launch
+import pl.training.forecast.adapters.view.ForecastViewState.Initial
 import pl.training.forecast.ports.input.GetForecastUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ForecastViewModel @Inject constructor(private val forecastService: GetForecastUseCase, private val mapper: ForecastViewModelMapper) : ViewModel() {
+
+    fun process(intents: Observable<ForecastIntent>): Observable<ForecastViewState> {
+        return Observable.just(Initial)
+    }
+
 
     private val forecastData = MutableLiveData<List<DayForecastViewModel>>()
 

@@ -1,6 +1,7 @@
 package pl.training.forecast.adapters.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,21 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import com.jakewharton.rxbinding4.view.clicks
+import com.jakewharton.rxbinding4.widget.textChanges
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable.merge
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import pl.training.forecast.adapters.R
 import pl.training.forecast.adapters.databinding.FragmentForecastBinding
 import pl.training.commons.getProperty
 import pl.training.commons.hideKeyboard
+import pl.training.commons.logging.Logger
 import pl.training.commons.setDrawable
 import pl.training.commons.setProperty
+import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
+import javax.inject.Inject
 
 internal class ForecastFragment : Fragment() {
 
@@ -25,9 +35,12 @@ internal class ForecastFragment : Fragment() {
 
     }
 
+    @Inject
+    lateinit var logger: Logger
+    private lateinit var binding: FragmentForecastBinding
     private val viewModel: ForecastViewModel by activityViewModels()
     private val forecastListAdapter = ForecastListAdapter()
-    private lateinit var binding: FragmentForecastBinding
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -53,8 +66,25 @@ internal class ForecastFragment : Fragment() {
             it.hideKeyboard()
             val cityName = binding.cityNameEditText.text.toString()
             setProperty(CITY_KEY, cityName)
-            viewModel.refreshForecast(cityName)
         }
+
+        val cityChanges = binding.cityNameEditText.textChanges()
+            .map { it.toString() }
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        val clicks = binding.checkButton.clicks().map {  }
+
+        val refreshIntents = clicks.withLatestFrom(cityChanges) { _, city -> city }
+            .map { RefreshForecast(it) }
+
+        val intents = listOf(refreshIntents)
+
+        viewModel.process(merge(intents))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::render) { logger.log("Processing failed") }
+            .addTo(disposables)
+
         binding.iconImage.setOnClickListener {
             findNavController().navigate(R.id.show_day_forecast_details)
         }
@@ -62,6 +92,10 @@ internal class ForecastFragment : Fragment() {
             viewModel.selectedDayForecastDate = it.date
             findNavController().navigate(R.id.show_day_forecast_details)
         }
+    }
+
+    private fun render(viewState: ForecastViewState) {
+        Log.i("####", viewState.toString())
     }
 
     private fun loadLatestForecast() {
@@ -80,6 +114,11 @@ internal class ForecastFragment : Fragment() {
             binding.pressureTextView.text = pressure
         }
         forecastListAdapter.update(forecast.drop(1))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposables.clear()
     }
 
 }
