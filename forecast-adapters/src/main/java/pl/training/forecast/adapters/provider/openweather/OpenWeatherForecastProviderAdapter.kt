@@ -4,6 +4,7 @@ import pl.training.commons.logging.Logger
 import pl.training.forecast.ports.output.ForecastProvider
 import pl.training.forecast.ports.model.DayForecast
 import java.lang.Exception
+import java.lang.RuntimeException
 
 class OpenWeatherForecastProviderAdapter(private val openWeatherApi: OpenWeatherApi, private val mapper: OpenWeatherForecastProviderMapper, private val logger: Logger) :
     ForecastProvider {
@@ -13,7 +14,8 @@ class OpenWeatherForecastProviderAdapter(private val openWeatherApi: OpenWeather
             openWeatherApi.getForecast(city).forecast.map(mapper::toModel)
         } catch (exception: Exception) {
             logger.log("Fetching forecast failed")
-            return emptyList()
+            //return emptyList()
+            throw RuntimeException("Refresh forecast failed")
         }
     }
 

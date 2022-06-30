@@ -52,9 +52,9 @@ internal class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getProperty(CITY_KEY, DEFAULT_CITY_NAME)?.let { binding.cityNameEditText.setText(it) }
         initViews()
         bindViews()
-        getProperty(CITY_KEY, DEFAULT_CITY_NAME)?.let { binding.cityNameEditText.setText(it) }
     }
 
     private fun initViews() {
@@ -72,7 +72,7 @@ internal class ForecastFragment : Fragment() {
             .map { it.toString() }
 
         val refreshIntents = clicks.withLatestFrom(cityChanges) { _, city -> city }
-            //.startWith(initialCity)
+            .startWith(initialCity)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
             .map { RefreshForecast(it) }
@@ -104,7 +104,7 @@ internal class ForecastFragment : Fragment() {
     private fun render(viewState: ForecastViewState) = when(viewState) {
         is Initial -> {}
         is Refreshed -> render(viewState.forecast)
-        is Error -> Log.i("###", "Refresh forecast failed ${viewState.message}")
+        is Error -> Log.i("###", "Error: ${viewState.message}")
         is Processing -> Log.i("###", "Processing...")
     }
 
