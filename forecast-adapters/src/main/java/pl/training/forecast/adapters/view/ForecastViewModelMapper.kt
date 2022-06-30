@@ -11,4 +11,6 @@ class ForecastViewModelMapper {
         DayForecastViewModel(icon, description, formatTemperature(temperature), formatPressure(pressure), formatDate(date))
     }
 
+    fun toViewModel(dayForecastList: List<DayForecast>) = dayForecastList.map { toViewModel(it) }
+
 }

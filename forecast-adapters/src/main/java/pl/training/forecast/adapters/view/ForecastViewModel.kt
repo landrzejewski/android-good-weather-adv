@@ -1,39 +1,42 @@
 package pl.training.forecast.adapters.view
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.launch
-import pl.training.forecast.adapters.view.ForecastViewState.Initial
+import io.reactivex.rxjava3.core.Observable.concat
+import kotlinx.coroutines.rx3.rxObservable
+import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
+import pl.training.forecast.adapters.view.ForecastResult.*
+import pl.training.forecast.adapters.view.ForecastResult.Refreshed
+import pl.training.forecast.adapters.view.ForecastViewState.*
 import pl.training.forecast.ports.input.GetForecastUseCase
+import pl.training.forecast.ports.model.DayForecast
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ForecastViewModel @Inject constructor(private val forecastService: GetForecastUseCase, private val mapper: ForecastViewModelMapper) : ViewModel() {
 
-    fun process(intents: Observable<ForecastIntent>): Observable<ForecastViewState> {
-        return Observable.just(Initial)
-    }
-
-
-    private val forecastData = MutableLiveData<List<DayForecastViewModel>>()
-
-    val forecast: LiveData<List<DayForecastViewModel>> = forecastData
     var selectedDayForecastDate: String? = null
 
-    fun refreshForecast(city: String) {
-        viewModelScope.launch {
-            onForecastLoaded(forecastService.loadForecast(city).map(mapper::toViewModel))
+    fun process(intents: Observable<ForecastIntent>) = intents.flatMap { intent ->
+        when (intent) {
+            is RefreshForecast -> refreshForecast(intent)
         }
+        .scan(Initial, this::reduce)
     }
 
-    private fun onForecastLoaded(forecast: List<DayForecastViewModel>) {
-        if (forecast.isNotEmpty()) {
-            forecastData.postValue(forecast)
-        }
+    private fun reduce(state: ForecastViewState, result: ForecastResult) = when(result) {
+        is Failure -> Error(result.message)
+        is Refreshing -> Processing
+        is Refreshed -> ForecastViewState.Refreshed(result.forecast)
+    }
+
+    private fun refreshForecast(intent: RefreshForecast): Observable<ForecastResult> {
+        val refreshing = Observable.just(Refreshing)
+        val forecast = rxObservable<List<DayForecast>> { forecastService.loadForecast(intent.cityName) }
+            .map(mapper::toViewModel)
+            .map { Refreshed(it) }
+        return concat(refreshing, forecast)
     }
 
 }

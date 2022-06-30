@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.jakewharton.rxbinding4.view.clicks
 import com.jakewharton.rxbinding4.widget.textChanges
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.merge
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.kotlin.addTo
 import pl.training.forecast.adapters.R
 import pl.training.forecast.adapters.databinding.FragmentForecastBinding
@@ -52,7 +54,7 @@ internal class ForecastFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         bindViews()
-        loadLatestForecast()
+        getProperty(CITY_KEY, DEFAULT_CITY_NAME)?.let { binding.cityNameEditText.setText(it) }
     }
 
     private fun initViews() {
@@ -61,21 +63,18 @@ internal class ForecastFragment : Fragment() {
     }
 
     private fun bindViews() {
-        viewModel.forecast.observe(viewLifecycleOwner, ::updateView)
-        binding.checkButton.setOnClickListener {
-            it.hideKeyboard()
-            val cityName = binding.cityNameEditText.text.toString()
-            setProperty(CITY_KEY, cityName)
-        }
-
         val cityChanges = binding.cityNameEditText.textChanges()
             .map { it.toString() }
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
 
         val clicks = binding.checkButton.clicks().map {  }
 
+        val initialCity: Observable<String> = Observable.just(binding.cityNameEditText.text)
+            .map { it.toString() }
+
         val refreshIntents = clicks.withLatestFrom(cityChanges) { _, city -> city }
+            //.startWith(initialCity)
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
             .map { RefreshForecast(it) }
 
         val intents = listOf(refreshIntents)
@@ -85,27 +84,28 @@ internal class ForecastFragment : Fragment() {
             .subscribe(this::render) { logger.log("Processing failed") }
             .addTo(disposables)
 
+        refreshIntents.subscribe {
+            binding.cityNameEditText.hideKeyboard()
+            setProperty(CITY_KEY, it.cityName)
+        }
+
         binding.iconImage.setOnClickListener {
             findNavController().navigate(R.id.show_day_forecast_details)
         }
+
         forecastListAdapter.tapListener = {
             viewModel.selectedDayForecastDate = it.date
             findNavController().navigate(R.id.show_day_forecast_details)
         }
     }
 
-    private fun render(viewState: ForecastViewState) {
-        Log.i("####", viewState.toString())
+    private fun render(viewState: ForecastViewState) = when(viewState) {
+        is Refresh -> render(viewState.)
+
     }
 
-    private fun loadLatestForecast() {
-        getProperty(CITY_KEY, DEFAULT_CITY_NAME)?.let {
-            viewModel.refreshForecast(it)
-            binding.cityNameEditText.setText(it)
-        }
-    }
 
-    private fun updateView(forecast: List<DayForecastViewModel>) {
+    private fun render(forecast: List<DayForecastViewModel>) {
         with(forecast.first()) {
             viewModel.selectedDayForecastDate = date
             binding.iconImage.setDrawable(icon)
