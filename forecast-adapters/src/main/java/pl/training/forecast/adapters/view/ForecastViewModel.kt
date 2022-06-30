@@ -1,9 +1,13 @@
 package pl.training.forecast.adapters.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.concat
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.rx3.rxObservable
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
 import pl.training.forecast.adapters.view.ForecastResult.*
@@ -17,12 +21,18 @@ import javax.inject.Inject
 internal class ForecastViewModel @Inject constructor(private val forecastService: GetForecastUseCase, private val mapper: ForecastViewModelMapper) : ViewModel() {
 
     var selectedDayForecastDate: String? = null
+    private val cache = BehaviorSubject.create<ForecastResult>()
+    private val disposables = CompositeDisposable()
 
-    fun process(intents: Observable<ForecastIntent>) = intents.flatMap { intent ->
-        when (intent) {
-            is RefreshForecast -> refreshForecast(intent)
+    fun process(intents: Observable<ForecastIntent>): Observable<ForecastViewState> {
+        intents.flatMap { intent ->
+            when (intent) {
+                is RefreshForecast -> refreshForecast(intent)
+            }
         }
-        .scan(Initial, this::reduce)
+        .subscribe(cache::onNext) { Log.i("#VM", it.toString()) }
+        .addTo(disposables)
+        return cache.scan(Initial, this::reduce)
     }
 
     private fun reduce(state: ForecastViewState, result: ForecastResult) = when(result) {

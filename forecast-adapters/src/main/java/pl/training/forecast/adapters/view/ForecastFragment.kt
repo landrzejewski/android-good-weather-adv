@@ -26,6 +26,8 @@ import pl.training.commons.logging.Logger
 import pl.training.commons.setDrawable
 import pl.training.commons.setProperty
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
+import pl.training.forecast.adapters.view.ForecastViewState.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 internal class ForecastFragment : Fragment() {
@@ -37,8 +39,6 @@ internal class ForecastFragment : Fragment() {
 
     }
 
-    @Inject
-    lateinit var logger: Logger
     private lateinit var binding: FragmentForecastBinding
     private val viewModel: ForecastViewModel by activityViewModels()
     private val forecastListAdapter = ForecastListAdapter()
@@ -66,7 +66,7 @@ internal class ForecastFragment : Fragment() {
         val cityChanges = binding.cityNameEditText.textChanges()
             .map { it.toString() }
 
-        val clicks = binding.checkButton.clicks().map {  }
+        val clicks = binding.checkButton.clicks()
 
         val initialCity: Observable<String> = Observable.just(binding.cityNameEditText.text)
             .map { it.toString() }
@@ -76,18 +76,20 @@ internal class ForecastFragment : Fragment() {
             .map { it.trim() }
             .filter { it.isNotEmpty() }
             .map { RefreshForecast(it) }
+            .share()
 
         val intents = listOf(refreshIntents)
 
         viewModel.process(merge(intents))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::render) { logger.log("Processing failed") }
+            .subscribe(this::render) { e -> Log.i("###", e.toString()) }
             .addTo(disposables)
 
         refreshIntents.subscribe {
             binding.cityNameEditText.hideKeyboard()
             setProperty(CITY_KEY, it.cityName)
         }
+        .addTo(disposables)
 
         binding.iconImage.setOnClickListener {
             findNavController().navigate(R.id.show_day_forecast_details)
@@ -100,10 +102,11 @@ internal class ForecastFragment : Fragment() {
     }
 
     private fun render(viewState: ForecastViewState) = when(viewState) {
-        is Refresh -> render(viewState.)
-
+        is Initial -> {}
+        is Refreshed -> render(viewState.forecast)
+        is Error -> Log.i("###", "Refresh forecast failed ${viewState.message}")
+        is Processing -> Log.i("###", "Processing...")
     }
-
 
     private fun render(forecast: List<DayForecastViewModel>) {
         with(forecast.first()) {
