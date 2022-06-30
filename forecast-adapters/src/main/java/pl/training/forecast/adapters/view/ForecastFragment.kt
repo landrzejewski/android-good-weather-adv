@@ -18,6 +18,11 @@ import io.reactivex.rxjava3.core.Observable.merge
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.Observables
 import io.reactivex.rxjava3.kotlin.addTo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import pl.training.forecast.adapters.R
 import pl.training.forecast.adapters.databinding.FragmentForecastBinding
 import pl.training.commons.getProperty
@@ -43,6 +48,8 @@ internal class ForecastFragment : Fragment() {
     private val viewModel: ForecastViewModel by activityViewModels()
     private val forecastListAdapter = ForecastListAdapter()
     private val disposables = CompositeDisposable()
+    private val job = Job()
+    private val fragmentScope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -78,18 +85,20 @@ internal class ForecastFragment : Fragment() {
             .map { RefreshForecast(it) }
             .share()
 
-        val intents = listOf(refreshIntents)
-
-        viewModel.process(merge(intents))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::render) { e -> Log.i("###", e.toString()) }
-            .addTo(disposables)
+        val flow = MutableSharedFlow<ForecastIntent>()
 
         refreshIntents.subscribe {
             binding.cityNameEditText.hideKeyboard()
             setProperty(CITY_KEY, it.cityName)
+            fragmentScope.launch { flow.emit(it) }
         }
         .addTo(disposables)
+
+        fragmentScope.launch {
+            viewModel.process(flow).collect {
+                render(it)
+            }
+        }
 
         binding.iconImage.setOnClickListener {
             findNavController().navigate(R.id.show_day_forecast_details)
@@ -122,6 +131,7 @@ internal class ForecastFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         disposables.clear()
+        job.cancel()
     }
 
 }

@@ -2,12 +2,16 @@ package pl.training.forecast.adapters.view
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.concat
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
 import pl.training.forecast.adapters.view.ForecastResult.*
@@ -23,17 +27,29 @@ internal class ForecastViewModel @Inject constructor(private val forecastService
 
     var selectedDayForecastDate: String? = null
 
-    private val cache = BehaviorSubject.create<ForecastResult>()
-    private val disposables = CompositeDisposable()
+    private val cache = MutableStateFlow<ForecastViewState>(Initial)
 
-    fun process(intents: Observable<ForecastIntent>): Observable<ForecastViewState> {
-        intents.flatMap { intent ->
-            when (intent) {
-                is RefreshForecast -> refreshForecast(intent)
+    fun process(intents: Flow<ForecastIntent>): Flow<ForecastViewState> {
+        viewModelScope.launch {
+            intents.map {
+                when (it) {
+                    is RefreshForecast -> refreshForecast(it)
+                }
+            }
+            .collect {
+
+                cache.emit(reduce(it))
             }
         }
-        .subscribe(cache::onNext) { Log.i("#VM", it.toString()) }
-        .addTo(disposables)
+
+
+
+
+
+//        .subscribe(cache::onNext) { Log.i("#VM", it.toString()) }
+//        .addTo(disposables)
+
+
         return cache.scan(Initial, this::reduce)
     }
 
@@ -43,12 +59,10 @@ internal class ForecastViewModel @Inject constructor(private val forecastService
         is Refreshed -> ForecastViewState.Refreshed(result.forecast)
     }
 
-    private fun refreshForecast(intent: RefreshForecast): Observable<ForecastResult> {
-        val forecast = toObservable { forecastService.loadForecast(intent.cityName) }
-            .map(mapper::toViewModel)
-            .map { Refreshed(it) as ForecastResult }
-            .onErrorReturn { exception -> Failure(exception.message.toString()) }
-        return concat(Observable.just(Refreshing), forecast)
+    private fun refreshForecast(intent: RefreshForecast) = flow {
+        emit(Refreshing)
+        val refreshed = Refreshed(mapper.toViewModel(forecastService.loadForecast(intent.cityName)))
+        emit(refreshed)
     }
 
 }
