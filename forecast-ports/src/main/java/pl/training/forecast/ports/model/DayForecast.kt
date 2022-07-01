@@ -2,7 +2,7 @@ package pl.training.forecast.ports.model
 
 import java.util.*
 
-class DayForecast(
+data class DayForecast(
     val icon: String,
     val description: String,
     val temperature: Double,

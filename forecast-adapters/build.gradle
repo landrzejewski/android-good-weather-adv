@@ -49,6 +49,8 @@ dependencies {
     compileOnly 'androidx.navigation:navigation-fragment-ktx:2.4.2'
     compileOnly 'androidx.navigation:navigation-ui-ktx:2.4.2'
     compileOnly "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    compileOnly "androidx.room:room-runtime:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
     compileOnly project(':forecast-ports')
     compileOnly project(':commons')
 
@@ -57,4 +59,23 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
     // implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.3"
     implementation "com.jakewharton.rxbinding4:rxbinding-core:4.0.0"
+
+    // To use the androidx.test.core APIs
+    androidTestImplementation("androidx.test:core:1.4.0")
+// Kotlin extensions for androidx.test.core
+    androidTestImplementation("androidx.test:core-ktx:1.4.0")
+// To use the androidx.test.espresso
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+// To use the JUnit Extension APIs
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+// Kotlin extensions for androidx.test.ext.junit
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
+// To use the Truth Extension APIs
+    androidTestImplementation("androidx.test.ext:truth:1.4.0")
+// To use the androidx.test.runner APIs
+    androidTestImplementation("androidx.test:runner:1.4.0")
+// To use android test orchestrator
+    androidTestUtil("androidx.test:orchestrator:1.4.1")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
+
 }
