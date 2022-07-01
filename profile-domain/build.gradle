@@ -10,4 +10,7 @@ java {
 
 dependencies {
     compileOnly project(':profile-ports')
+
+    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("androidx.test.ext:junit-ktx:1.1.3")
 }

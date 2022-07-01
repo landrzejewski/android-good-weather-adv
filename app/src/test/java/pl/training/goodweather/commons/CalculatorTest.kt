@@ -28,7 +28,7 @@ class CalculatorTest {
         // when
         val result = calculator.add(firstNumber, secondNumber)
         // then
-        assertEquals(3.0, result)
+        assertEquals(3.0, result, 0.1)
     }
 
     @Test(expected = IllegalArgumentException::class)
