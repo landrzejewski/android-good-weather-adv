@@ -5,28 +5,11 @@
     app:startDestination="@id/forecastFragment">
 
     <fragment
-        android:id="@+id/forecastFragment"
-        android:name="pl.training.forecast.adapters.view.ForecastFragment"
-        android:label="@string/forecast">
-        <action
-            android:id="@+id/show_day_forecast_details"
-            app:destination="@id/dayForecastFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/dayForecastFragment"
-        android:name="pl.training.forecast.adapters.view.DayForecastFragment"
-        android:label="@string/day_forecast">
-        <action
-            android:id="@+id/show_forecast"
-            app:destination="@id/forecastFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/profileFragment"
         android:name="pl.training.profile.adapters.view.ProfileFragment"
         android:label="@string/profile">
     </fragment>
+
+    <include app:graph="@navigation/forecast_routing"/>
 
 </navigation>

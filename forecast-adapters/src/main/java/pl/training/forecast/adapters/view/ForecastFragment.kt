@@ -30,7 +30,7 @@ import pl.training.forecast.adapters.databinding.FragmentForecastBinding
 import pl.training.forecast.adapters.view.ForecastIntent.RefreshForecast
 import pl.training.forecast.adapters.view.ForecastViewState.*
 
-internal class ForecastFragment : Fragment() {
+class ForecastFragment : Fragment() {
 
     companion object Values {
 
